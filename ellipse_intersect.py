@@ -1,7 +1,7 @@
 from sympy import Circle, Ellipse, Point
 import numpy as np
 
-USE_SYMPY_INTERSECTION = True
+USE_SYMPY_INTERSECTION = False
 # Set VISUALISE to True to view plot, it's False
 # so that outputs of this script can be imported
 # without overwriting the plot being built in sketch.py
