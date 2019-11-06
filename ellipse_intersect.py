@@ -47,29 +47,41 @@ if VISUALISE:
         plt.scatter(pcx, pcy, s=10, color="red")
         plt.scatter(pex, pey, s=10, color="blue")
 
-# Solving the intersection algebraically with Sage
-# p_4 = a^2 * ((Yc - yc)^2 - b^2) + b^2 * ( (Xc - xc) - r )^2
-# 0
-p_4 = a ** 2 * ((cy - ecy) ** 2 - b ** 2) + b ** 2 * ((cx - ecx) - r) ** 2
-# p_3 = 4 * a^2 * r * ( Yc - yc )
-# 0
+# Solving the simple version algebraically with Sage
+# p_4 = -a^2*(-Yc + b + yc)*(Yc + b - yc) + b^2*(-Xc + r + xc)^2
+# p_3 = 4*a^2*r*(Yc - yc)
+# p_2 = 2*a^2*(Yc^2 - 2*Yc*yc - b^2 + 2*r^2 + yc^2) - 2*b^2*(-Xc + r + xc)*(Xc + r - xc)
+# p_1 = 4*a^2*r*(Yc - yc)
+# p_0 = -a^2*(-Yc + b + yc)*(Yc + b - yc) + b^2*(Xc + r - xc)^2
+p_4 = -a ** 2 * (-cy + b + ecy) * (cy + b - ecy) + b ** 2 * (-cx + r + ecx) ** 2
 p_3 = 4 * a ** 2 * r * (cy - ecy)
-# p_2 = 2 * ( a^2 * ( (Yc - yc)^2 - b^2 + 2*r^2 ) ) + b^2 * ( (Xc - xc) + r )^2
-# 27179296875
-p_2 = (
-    2 * (a ** 2 * ((cy - ecy) ** 2 - b ** 2 + 2 * r ** 2))
-    + b ** 2 * ((cx - ecx) + r) ** 2
-)
-# p_1 = 4 * a^2 * r * (Yc - yc)
-# 0
+p_2 = 2 * a ** 2 * (
+    cy ** 2 - 2 * cy * ecy - b ** 2 + 2 * r ** 2 + ecy ** 2
+) - 2 * b ** 2 * (-cx + r + ecx) * (cx + r - ecx)
 p_1 = 4 * a ** 2 * r * (cy - ecy)
-# p_0 = a^2 * ((Yc - yc)^2 - b^2) + b^2 * ((Xc - xc) + r)^2
-# -30628125000
-p_0 = a ** 2 * ((cy - ecy) ** 2 - b ** 2) + b ** 2 * ((cx - ecx) + r) ** 2
-#
+p_0 = -a ** 2 * (-cy + b + ecy) * (cy + b - ecy) + b ** 2 * (cx + r - ecx) ** 2
+
 # Evaluate the polynomial arguments with list comprehension:
 p_coeff = [p_4, p_3, p_2, p_1, p_0]
 t_roots = np.roots(p_coeff)
+
+# Deduplicate the roots but without sorting
+t_roots = [
+    t_roots[ii].real
+    for ii in np.sort(
+        [[tt.real for tt in t_roots].index(t) for t in np.unique(np.real(t_roots))]
+    )
+]
+# alist # Say we have a list of values but there are duplicates
+# [2, 5, 3, 4, 3, 6]
+# np.unique(alist)          # numpy.unique will sort after deduplicating,
+# array([2, 3, 4, 5, 6])    # but the order may be important
+# [alist[ii] for ii in np.sort([alist.index(i) for i in np.unique(alist)])]
+# [2, 5, 3, 4, 6]
+# list.index(i) will give the index of the first instance of a value in the list
+# sort the list of these indices for every value in the deduplicated list to get
+# just the first instance of each value (i.e. deduplicate without sorting)
+
 
 if VISUALISE:
     pcol = ["yellow", "palegreen", "magenta", "chocolate"]
@@ -108,3 +120,4 @@ if VISUALISE:
             el_x = ecx + a * cos(alpha_x)
             el_y = ecy + b * sin(alpha_y)
             plt.scatter(el_x, el_y, s=50, color=pcol[ip[0]])
+    plt.show()
