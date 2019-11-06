@@ -1,11 +1,16 @@
 from sympy import Circle, Ellipse, Point
 import numpy as np
 
-USE_SYMPY_INTERSECTION = False
 # Set VISUALISE to True to view plot, it's False
 # so that outputs of this script can be imported
 # without overwriting the plot being built in sketch.py
-VISUALISE = True
+VISUALISE = False
+EXPORT_INTERSECTIONS = True
+# USE_SYMPY_INTERSECTION = False # Deprecated
+
+if EXPORT_INTERSECTIONS:
+    intersection_points = []
+    intersection_t = []
 
 # circle
 cx, cy = (550, 1000)
@@ -20,14 +25,14 @@ b = 275  # v_radius
 c = Circle(Point(cx, cy), r)
 e = Ellipse(Point(ecx, ecy), a, b)
 
-if USE_SYMPY_INTERSECTION:
-    i = e.intersection(c)
-
-    intersection_points = [(float(ii.x), float(ii.y)) for ii in i]
-    intersection_t = [
-        (np.arccos((ip[0] - ecx) / a), np.arcsin((ip[1] - ecy) / b))
-        for ip in intersection_points
-    ]
+# if USE_SYMPY_INTERSECTION:
+#     i = e.intersection(c)
+#
+#     intersection_points = [(float(ii.x), float(ii.y)) for ii in i]
+#     intersection_t = [
+#         (np.arccos((ip[0] - ecx) / a), np.arcsin((ip[1] - ecy) / b))
+#         for ip in intersection_points
+#     ]
 
 if VISUALISE:
     from math import sin, cos, radians as rad
@@ -90,34 +95,29 @@ for t_num, t in enumerate(t_roots):
     pol = [
         (c[1] * t ** c[0]) for c in list(reversed(list(enumerate(reversed(p_coeff)))))
     ]
-    assert (
-        int(sum(pol)) == 0
-    ), "Polynomial didn't evaluate to 0 as expected, root not found"
+    if int(sum(pol)) != 0:
+        print(
+            f"Polynomial didn't evaluate to 0 as expected. "
+            + f"Root {t} not valid. Skipping..."
+        )
+        continue # Do not plot this root, skip to next root in t_roots (if any left)
 
-    # Check with Sage
-    # x = Xc + r*( (1 - t^2) / (1 + t^2) )
-    ### When t = 1.0615515694374378:
-    # 536.576354560990
-    ### When t = -1.0615515694374378:
-    # 536.576354560990
     x_crossing = cx + r * ((1 - t ** 2) / (1 + t ** 2))
-    # y = Yc + r*( (2*t) / (1 + t^2) )
-    ### When t = 0.7071067811865476:
-    # 1224.59921135910
-    ### When t = -1.0615515694374378:
-    # 775.400788640904
     y_crossing = cy + r * ((2 * t) / (1 + t ** 2))
 
     if VISUALISE:
         plt.scatter(x_crossing, y_crossing, s=50, color=pcol[t_num])
+    if EXPORT_INTERSECTIONS:
+        intersection_points.append((x_crossing, y_crossing))
+        intersection_t.append(t)
 
 if VISUALISE:
-    if USE_SYMPY_INTERSECTION:
-        pcol = ["gray", "lime", "magenta"]
-        for ip in enumerate(intersection_t):
-            alpha_x = ip[1][0]  # use the arccos derived value
-            alpha_y = ip[1][1]  # use the arcsin derived value
-            el_x = ecx + a * cos(alpha_x)
-            el_y = ecy + b * sin(alpha_y)
-            plt.scatter(el_x, el_y, s=50, color=pcol[ip[0]])
+    # if USE_SYMPY_INTERSECTION:
+    #    pcol = ["gray", "lime", "magenta"]
+    #    for ip in enumerate(intersection_t):
+    #        alpha_x = ip[1][0]  # use the arccos derived value
+    #        alpha_y = ip[1][1]  # use the arcsin derived value
+    #        el_x = ecx + a * cos(alpha_x)
+    #        el_y = ecy + b * sin(alpha_y)
+    #        plt.scatter(el_x, el_y, s=50, color=pcol[ip[0]])
     plt.show()
