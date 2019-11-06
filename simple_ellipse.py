@@ -2,14 +2,14 @@ from sympy import Circle, Ellipse, Point
 import numpy as np
 
 USE_SYMPY_INTERSECTION = False
-VISUALISE = True # Display plot after running
-SAVE_PLOT = False # Will take priority over VISUALISE
+VISUALISE = True  # Display plot after running
+SAVE_PLOT = False  # Will take priority over VISUALISE
 
 # circle
-cx, cy = (1, 2) # Xc, Yc
+cx, cy = (1, 2)  # Xc, Yc
 r = 1
 # ellipse
-ecx, ecy = (2, 2) #xc, yc
+ecx, ecy = (2, 2)  # xc, yc
 a = 2  # h_radius
 b = 1  # v_radius
 
@@ -30,9 +30,9 @@ if VISUALISE or SAVE_PLOT:
     ax = plt.subplot()
     ax.set_aspect(1.0)
     plt.axis([0, 4, 4, 0])
-    ax.set_title('Ellipse intersects a unit circle', size=22)
-    ax.set_xlabel('x', size=14)
-    ax.set_ylabel('y', size=14)
+    ax.set_title("Ellipse intersects a unit circle", size=22)
+    ax.set_xlabel("x", size=14)
+    ax.set_ylabel("y", size=14)
 
     for t in np.arange(rad(0), rad(360), rad(2)):
         pcx, pcy = eval(str(c_eq.x)), eval(str(c_eq.y))
@@ -53,20 +53,25 @@ if USE_SYMPY_INTERSECTION:
 # p_2 = 2*a^2*(Yc^2 - 2*Yc*yc - b^2 + 2*r^2 + yc^2) - 2*b^2*(-Xc + r + xc)*(Xc + r - xc)
 # p_1 = 4*a^2*r*(Yc - yc)
 # p_0 = -a^2*(-Yc + b + yc)*(Yc + b - yc) + b^2*(Xc + r - xc)^2
-p_4 = -a**2*(-cy + b + ecy)*(cy + b - ecy) + b**2*(-cx + r + ecx)**2
-p_3 = 4*a**2*r*(cy - ecy)
-p_2 = 2*a**2*(cy**2 - 2*cy*ecy - b**2 + 2*r**2 + ecy**2) - 2*b**2*(-cx + r + ecx)*(cx + r - ecx)
-p_1 = 4*a**2*r*(cy - ecy)
-p_0 = -a**2*(-cy + b + ecy)*(cy + b - ecy) + b**2*(cx + r - ecx)**2
+p_4 = -a ** 2 * (-cy + b + ecy) * (cy + b - ecy) + b ** 2 * (-cx + r + ecx) ** 2
+p_3 = 4 * a ** 2 * r * (cy - ecy)
+p_2 = 2 * a ** 2 * (
+    cy ** 2 - 2 * cy * ecy - b ** 2 + 2 * r ** 2 + ecy ** 2
+) - 2 * b ** 2 * (-cx + r + ecx) * (cx + r - ecx)
+p_1 = 4 * a ** 2 * r * (cy - ecy)
+p_0 = -a ** 2 * (-cy + b + ecy) * (cy + b - ecy) + b ** 2 * (cx + r - ecx) ** 2
 
 # Evaluate the polynomial arguments with list comprehension:
 p_coeff = [p_4, p_3, p_2, p_1, p_0]
 t_roots = np.roots(p_coeff)
 
 # Deduplicate the roots but without sorting
-t_roots = [t_roots[ii].real for ii in np.sort(
+t_roots = [
+    t_roots[ii].real
+    for ii in np.sort(
         [[tt.real for tt in t_roots].index(t) for t in np.unique(np.real(t_roots))]
-        )]
+    )
+]
 # alist # Say we have a list of values but there are duplicates
 # [2, 5, 3, 4, 3, 6]
 # np.unique(alist)          # numpy.unique will sort after deduplicating,
@@ -108,6 +113,6 @@ for t_num, t in enumerate(t_roots):
 if SAVE_PLOT:
     fig.set_figheight(10)
     fig.set_figwidth(20)
-    plt.savefig('simple-ellipse-sketch.png', bbox_inches='tight')
+    plt.savefig("simple-ellipse-sketch.png", bbox_inches="tight")
 elif VISUALISE:
     plt.show()

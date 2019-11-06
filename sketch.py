@@ -132,12 +132,12 @@ for alpha in np.arange(rad(0), rad(360), rad(3)):
 
 # Plot the t values derived from parametric equation for ellipse
 # as the alpha values into the equation for the ellipse
-pcol = ["red","blue", "yellow"]
+pcol = ["red", "blue", "yellow"]
 for ip in enumerate(intersection_t):
-    alpha_x = ip[1][0] # use the arccos derived value
-    alpha_y = ip[1][1] # use the arcsin derived value
-    #alpha = 1.3595854464357182
-    #alpha = 4.92355998607438685
+    alpha_x = ip[1][0]  # use the arccos derived value
+    alpha_y = ip[1][1]  # use the arcsin derived value
+    # alpha = 1.3595854464357182
+    # alpha = 4.92355998607438685
     el_x = xc + (h_radius - tc_r) * cos(alpha_x)
     el_y = yc + (v_radius - tc_r) * sin(alpha_y)
     plt.scatter(el_x, el_y, s=50, color=pcol[ip[0]])

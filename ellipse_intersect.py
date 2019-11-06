@@ -12,8 +12,8 @@ cx, cy = (550, 1000)
 r = 225
 # ellipse
 ecx, ecy = (1000, 1000)
-a = 675 # h_radius
-b = 275 # v_radius
+a = 675  # h_radius
+b = 275  # v_radius
 # N.B.: When comparing to variables in sketch.py that
 # h_radius/v_radius there refer to its outer ellipse
 
@@ -103,8 +103,8 @@ if VISUALISE:
     if USE_SYMPY_INTERSECTION:
         pcol = ["gray", "lime", "magenta"]
         for ip in enumerate(intersection_t):
-            alpha_x = ip[1][0] # use the arccos derived value
-            alpha_y = ip[1][1] # use the arcsin derived value
+            alpha_x = ip[1][0]  # use the arccos derived value
+            alpha_y = ip[1][1]  # use the arcsin derived value
             el_x = ecx + a * cos(alpha_x)
             el_y = ecy + b * sin(alpha_y)
             plt.scatter(el_x, el_y, s=50, color=pcol[ip[0]])

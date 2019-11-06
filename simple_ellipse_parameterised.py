@@ -55,20 +55,25 @@ if USE_SYMPY_INTERSECTION:
 # p_2 = 2*a^2*(Yc^2 - 2*Yc*yc - b^2 + 2*r^2 + yc^2) - 2*b^2*(-Xc + r + xc)*(Xc + r - xc)
 # p_1 = 4*a^2*r*(Yc - yc)
 # p_0 = -a^2*(-Yc + b + yc)*(Yc + b - yc) + b^2*(Xc + r - xc)^2
-p_4 = -a**2*(-cy + b + ecy)*(cy + b - ecy) + b**2*(-cx + r + ecx)**2
-p_3 = 4*a**2*r*(cy - ecy)
-p_2 = 2*a**2*(cy**2 - 2*cy*ecy - b**2 + 2*r**2 + ecy**2) - 2*b**2*(-cx + r + ecx)*(cx + r - ecx)
-p_1 = 4*a**2*r*(cy - ecy)
-p_0 = -a**2*(-cy + b + ecy)*(cy + b - ecy) + b**2*(cx + r - ecx)**2
+p_4 = -a ** 2 * (-cy + b + ecy) * (cy + b - ecy) + b ** 2 * (-cx + r + ecx) ** 2
+p_3 = 4 * a ** 2 * r * (cy - ecy)
+p_2 = 2 * a ** 2 * (
+    cy ** 2 - 2 * cy * ecy - b ** 2 + 2 * r ** 2 + ecy ** 2
+) - 2 * b ** 2 * (-cx + r + ecx) * (cx + r - ecx)
+p_1 = 4 * a ** 2 * r * (cy - ecy)
+p_0 = -a ** 2 * (-cy + b + ecy) * (cy + b - ecy) + b ** 2 * (cx + r - ecx) ** 2
 
 # Evaluate the polynomial arguments with list comprehension:
 p_coeff = [p_4, p_3, p_2, p_1, p_0]
 t_roots = np.roots(p_coeff)
 
 # Deduplicate the roots but without sorting
-t_roots = [t_roots[ii].real for ii in np.sort(
-    [[tt.real for tt in t_roots].index(t) for t in np.unique(np.real(t_roots))]
-)]
+t_roots = [
+    t_roots[ii].real
+    for ii in np.sort(
+        [[tt.real for tt in t_roots].index(t) for t in np.unique(np.real(t_roots))]
+    )
+]
 # alist # Say we have a list of values but there are duplicates
 # [2, 5, 3, 4, 3, 6]
 # np.unique(alist)          # numpy.unique will sort after deduplicating,
@@ -88,8 +93,10 @@ for t_num, t in enumerate(t_roots):
         (c[1] * t ** c[0]) for c in list(reversed(list(enumerate(reversed(p_coeff)))))
     ]
     if int(sum(pol)) != 0:
-        print(f"Polynomial didn't evaluate to 0 as expected, root {t} not valid. Skipping...")
-        continue # Do not plot this root, skip to the next root in t_roots (if any left)
+        print(
+            f"Polynomial didn't evaluate to 0 as expected, root {t} not valid. Skipping..."
+        )
+        continue  # Do not plot this root, skip to the next root in t_roots (if any left)
 
     # Check with Sage
     # x = Xc + r*( (1 - t^2) / (1 + t^2) )

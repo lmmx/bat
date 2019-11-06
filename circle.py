@@ -11,7 +11,7 @@ xc = 50
 yc = 50
 
 # Leave the same amount of space either side
-plt.axis([0,100,100,0])
+plt.axis([0, 100, 100, 0])
 
 plt.scatter(xc, yc, s=10, color="k")
 

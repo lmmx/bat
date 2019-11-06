@@ -36,7 +36,7 @@ def collect_by_var(expr, var):
 
 def factor_expr(expr_arg_list, var=None, group_ab_by_a=True, custom_ab=var("a, b")):
     # The negative `not has()` for b_terms avoids counting a*b terms twice
-    a, b = custom_ab # For some reason this was the only way to set (a, b) changeably
+    a, b = custom_ab  # For some reason this was the only way to set (a, b) changeably
     if group_ab_by_a:
         a_terms = [a_term for a_term in expr_arg_list if a_term.has(a)]
         b_terms = [
