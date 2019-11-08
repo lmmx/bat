@@ -100,7 +100,7 @@ for t_num, t in enumerate(t_roots):
             f"Polynomial didn't evaluate to 0 as expected. "
             + f"Root {t} not valid. Skipping..."
         )
-        continue # Do not plot this root, skip to next root in t_roots (if any left)
+        continue  # Do not plot this root, skip to next root in t_roots (if any left)
 
     x_crossing = cx + r * ((1 - t ** 2) / (1 + t ** 2))
     y_crossing = cy + r * ((2 * t) / (1 + t ** 2))

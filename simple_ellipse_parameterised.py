@@ -94,22 +94,12 @@ for t_num, t in enumerate(t_roots):
     ]
     if int(sum(pol)) != 0:
         print(
-            f"Polynomial didn't evaluate to 0 as expected, root {t} not valid. Skipping..."
+            f"Polynomial didn't evaluate to 0 as expected. "
+            + f"Root {t} not valid. Skipping..."
         )
-        continue  # Do not plot this root, skip to the next root in t_roots (if any left)
+        continue  # Do not plot this root, skip to next root in t_roots (if any left)
 
-    # Check with Sage
-    # x = Xc + r*( (1 - t^2) / (1 + t^2) )
-    ### When t = 0.7071067811865476:
-    # 1.3333333333333335
-    ### When t = -0.7071067811865476:
-    # 1.3333333333333333
     x_crossing = cx + r * ((1 - t ** 2) / (1 + t ** 2))
-    # y = Yc + r*( (2*t) / (1 + t^2) )
-    ### When t = 0.7071067811865476:
-    # 2.942809041582063
-    ### When t = -0.7071067811865476:
-    # 1.0571909584179364
     y_crossing = cy + r * ((2 * t) / (1 + t ** 2))
 
     if VISUALISE or SAVE_PLOT:
