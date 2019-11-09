@@ -3,7 +3,7 @@ import numpy as np
 from math import sin, cos, radians as rad, sqrt
 from ellipse_intersect import intersection_points, intersection_t
 
-VISUALISE = False
+VISUALISE = True
 SAVE_PLOT = False
 
 if VISUALISE or SAVE_PLOT:
@@ -401,6 +401,119 @@ assert len(circle_permutation) == len(circle_centres)
 # Sucessfully recovered the relabelling permutation
 relabelling_permutation = np.array(circle_permutation).argsort().tolist()
 assert np.array_equal(relabelling_permutation, relabel_sequence)
+
+# To trace out the interior arcs for each circle in turn, we also need the set of
+# intersection points: this is for all adjacent circles, but this has been simplified
+# now as the adjacent circles in circle_centres_clockwise
+
+
+def pq_dist(p, q):
+    """
+    Calculate the Euclidean distance between two points (p,q)
+    """
+    assert len(p) == len(q) == 2  # Both points are (x,y) coordinate pairs
+    d = sqrt((p[0] - q[0]) ** 2 + (p[1] - q[1]) ** 2)
+    return d
+
+
+def choose_interior_ip(c1c, c2c, interior_centre=(xc, yc), tc_r=tc_r, lc_r=lc_r):
+    """
+    Provide the centre coordinates for two circles, from which the radius will be
+    derived according to the default radius above/below the ellipse midpoint.
+    """
+    assert len(c1c) == len(c2c) == 2
+    c1x, c1y = c1c
+    c2x, c2y = c2c
+    c1r, c2r = lc_r, lc_r
+    # Reassign radius as top circle radius if circle centre is above cy midpoint
+    if c1y < interior_centre[1]:
+        c1r = tc_r
+    if c2y < interior_centre[1]:
+        c2r = tc_r
+    # Choose interior intersection point of the two circles by proximity to (xc, yc)
+    # Pair of circles: c1 has centre (A,B), radius r; c2 has centre (C,D) radius a
+    # Reuse the polynomial for ellipse-circle intersection, let a = b (radius of c2)
+    # >>> from sympy import var
+    # >>> cx, ecx, cy, ecy, a, b, r = var("c1x, c2x, c1y, c2y, c1r, c2r, c2r")
+    # Then copy the result of interpreting the SymPy-renamed variable equations as code:
+    # p_4 = -c1r^2*(-c1y + c2r + c2y)*(c1y + c2r - c2y) + c2r^2*(-c1x + c2r + c2x)^2
+    # p_3 = 4*c1r^2*c2r*(c1y - c2y)
+    # p_2 = 2*c1r^2*(c1y^2 - 2*c1y*c2y + c2r^2 + c2y^2) - 2*c2r^2*(-c1x + c2r + c2x)*(c1x + c2r - c2x)
+    # p_1 = 4*c1r^2*c2r*(c1y - c2y)
+    # p_0 = -c1r^2*(-c1y + c2r + c2y)*(c1y + c2r - c2y) + c2r^2*(c1x + c2r - c2x)^2
+    p_4 = (
+        -c1r ** 2 * (-c1y + c2r + c2y) * (c1y + c2r - c2y)
+        + c2r ** 2 * (-c1x + c2r + c2x) ** 2
+    )
+    p_3 = 4 * c1r ** 2 * c2r * (c1y - c2y)
+    p_2 = 2 * c1r ** 2 * (
+        c1y ** 2 - 2 * c1y * c2y + c2r ** 2 + c2y ** 2
+    ) - 2 * c2r ** 2 * (-c1x + c2r + c2x) * (c1x + c2r - c2x)
+    p_1 = 4 * c1r ** 2 * c2r * (c1y - c2y)
+    p_0 = (
+        -c1r ** 2 * (-c1y + c2r + c2y) * (c1y + c2r - c2y)
+        + c2r ** 2 * (c1x + c2r - c2x) ** 2
+    )
+    p_coeff = [p_4, p_3, p_2, p_1, p_0]
+    t_roots = np.roots(p_coeff)
+    # Deduplicate the roots but without sorting
+    t_roots = [
+        t_roots[ii].real
+        for ii in np.sort(
+            [[tt.real for tt in t_roots].index(t) for t in np.unique(np.real(t_roots))]
+        )
+    ]
+    # Then reconstruct the (x,y) values corresponding to intersection coordinates
+    possible_ip = []
+    possible_ip_c1t = []
+    for t_num, t in enumerate(t_roots):
+        pol = [
+            (c[1] ** c[0]) for c in list(reversed(list(enumerate(reversed(p_coeff)))))
+        ]
+        if int(sum(pol)) != 0:
+            print(
+                f"Polynomial didn't evaluate to 0 as expected. "
+                + f"Root {t} not valid. Skipping..."
+            )
+            continue  # Do not use this root, skip to next root in t_roots (if any left)
+        x_crossing = c1x + c1r * ((1 - t ** 2) / (1 + t ** 2))
+        y_crossing = c1y + c1r * ((2 * t) / (1 + t ** 2))
+        possible_ip.append((x_crossing, y_crossing))
+        possible_ip_c1t.append(t)
+    if len(possible_ip) == 0:
+        # In this case only one singular intersection point (or else an error occurred)
+        # This should only happen at the transition between top and lower circles
+        assert c1r != c2r, "An error has occured: no valid intersection points found"
+        # In this case just find the (dx, dy) and take a proportion of the radii
+        c1c2_dx, c1c2_dy = np.subtract((c1x, c1y), (c2x, c2y))
+        r_ratio_dx, r_ratio_dy = np.dot( ( c1r / (c1r + c2r) ), (c1c2_dx, c1c2_dy))
+        ip = (c1x + r_ratio_dx, c1y + r_ratio_dy)
+        c1t = np.arccos( (ip[0] - c1x) / c1r)
+    else:
+        # Then compare the [at most] two points and select the nearest to interior_centre
+        ip_dists = [pq_dist(interior_centre, ip) for ip in possible_ip]
+        ip_n = np.array(ip_dists).argsort().argsort().tolist().index(0)
+        ip = possible_ip[ip_n]
+        c1t = possible_ip_c1t[ip_n]
+    return ip, c1t
+
+
+for cc_n, (cc_xc, cc_yc) in enumerate(circle_centres_clockwise):
+    prev_xc, prev_yc = circle_centres_clockwise[cc_n - 1]
+    next_xc, next_yc = circle_centres_clockwise[(cc_n + 1) % len(circle_centres)]
+    # Each adjacent circle (2 per circle) may have 1 or 2 intersection points
+    prev_ip, prev_t = choose_interior_ip((cc_xc, cc_yc), (prev_xc, prev_yc))
+    next_ip, next_t = choose_interior_ip((cc_xc, cc_yc), (next_xc, next_yc))
+    # Assign radius based on whether in upper or lower half of the ellipse
+    if cc_yc > yc:
+        cc_r = lc_r
+    else:
+        cc_r = tc_r
+    if VISUALISE or SAVE_PLOT:
+        for arc_t in np.arange(prev_t, next_t, rad(10)):
+            arc_x = cc_xc + cc_r * cos(arc_t)
+            arc_y = cc_yc + cc_r * sin(arc_t)
+            plt.scatter(arc_x, arc_y, s=20, color="k")
 
 if SAVE_PLOT:
     fig.set_figheight(10)
