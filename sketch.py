@@ -434,25 +434,26 @@ def choose_interior_ip(c1c, c2c, interior_centre=(xc, yc), tc_r=tc_r, lc_r=lc_r)
     # Pair of circles: c1 has centre (A,B), radius r; c2 has centre (C,D) radius a
     # Reuse the polynomial for ellipse-circle intersection, let a = b (radius of c2)
     # >>> from sympy import var
-    # >>> cx, ecx, cy, ecy, a, b, r = var("c1x, c2x, c1y, c2y, c1r, c2r, c2r")
-    # Then copy the result of interpreting the SymPy-renamed variable equations as code:
-    # p_4 = -c1r^2*(-c1y + c2r + c2y)*(c1y + c2r - c2y) + c2r^2*(-c1x + c2r + c2x)^2
-    # p_3 = 4*c1r^2*c2r*(c1y - c2y)
-    # p_2 = 2*c1r^2*(c1y^2 - 2*c1y*c2y + c2r^2 + c2y^2) - 2*c2r^2*(-c1x + c2r + c2x)*(c1x + c2r - c2x)
-    # p_1 = 4*c1r^2*c2r*(c1y - c2y)
-    # p_0 = -c1r^2*(-c1y + c2r + c2y)*(c1y + c2r - c2y) + c2r^2*(c1x + c2r - c2x)^2
-    p_4 = (
-        -c1r ** 2 * (-c1y + c2r + c2y) * (c1y + c2r - c2y)
-        + c2r ** 2 * (-c1x + c2r + c2x) ** 2
+    # >>> cx, ecx, cy, ecy, r, a, b = var("c1x, c2x, c1y, c2y, c1r, c2r, c2r")
+    # The result of interpreting the SymPy-renamed equations in ellipse_intersect.py:
+    # >>> p_coeff = [p_4, p_3, p_2, p_1, p_0]
+    # >>> for i in [0,1,2,3,4]: print(f"p_{4-i} = {str(p_coeff[i]).replace('**','^')}")
+    # p_4 = c2r^2*(c1r - c1x + c2x)^2 - c2r^2*(-c1y + c2r + c2y)*(c1y + c2r - c2y)
+    # p_3 = 4*c1r*c2r^2*(c1y - c2y)
+    # p_2 = -2*c2r^2*(c1r - c1x + c2x)*(c1r + c1x - c2x) + 2*c2r^2*(2*c1r^2 + c1y^2 - 2*c1y*c2y - c2r^2 + c2y^2)
+    # p_1 = 4*c1r*c2r^2*(c1y - c2y)
+    # p_0 = c2r^2*(c1r + c1x - c2x)^2 - c2r^2*(-c1y + c2r + c2y)*(c1y + c2r - c2y)
+    # >>> for i in [0,1,2,3,4]: print(f"p_{4-i} = {p_coeff[i]}")
+    p_4 = c2r ** 2 * (c1r - c1x + c2x) ** 2 - c2r ** 2 * (-c1y + c2r + c2y) * (
+        c1y + c2r - c2y
     )
-    p_3 = 4 * c1r ** 2 * c2r * (c1y - c2y)
-    p_2 = 2 * c1r ** 2 * (
-        c1y ** 2 - 2 * c1y * c2y + c2r ** 2 + c2y ** 2
-    ) - 2 * c2r ** 2 * (-c1x + c2r + c2x) * (c1x + c2r - c2x)
-    p_1 = 4 * c1r ** 2 * c2r * (c1y - c2y)
-    p_0 = (
-        -c1r ** 2 * (-c1y + c2r + c2y) * (c1y + c2r - c2y)
-        + c2r ** 2 * (c1x + c2r - c2x) ** 2
+    p_3 = 4 * c1r * c2r ** 2 * (c1y - c2y)
+    p_2 = -2 * c2r ** 2 * (c1r - c1x + c2x) * (c1r + c1x - c2x) + 2 * c2r ** 2 * (
+        2 * c1r ** 2 + c1y ** 2 - 2 * c1y * c2y - c2r ** 2 + c2y ** 2
+    )
+    p_1 = 4 * c1r * c2r ** 2 * (c1y - c2y)
+    p_0 = c2r ** 2 * (c1r + c1x - c2x) ** 2 - c2r ** 2 * (-c1y + c2r + c2y) * (
+        c1y + c2r - c2y
     )
     p_coeff = [p_4, p_3, p_2, p_1, p_0]
     t_roots = np.roots(p_coeff)
@@ -486,9 +487,9 @@ def choose_interior_ip(c1c, c2c, interior_centre=(xc, yc), tc_r=tc_r, lc_r=lc_r)
         assert c1r != c2r, "An error has occured: no valid intersection points found"
         # In this case just find the (dx, dy) and take a proportion of the radii
         c1c2_dx, c1c2_dy = np.subtract((c1x, c1y), (c2x, c2y))
-        r_ratio_dx, r_ratio_dy = np.dot( ( c1r / (c1r + c2r) ), (c1c2_dx, c1c2_dy))
+        r_ratio_dx, r_ratio_dy = np.dot((c1r / (c1r + c2r)), (c1c2_dx, c1c2_dy))
         ip = (c1x + r_ratio_dx, c1y + r_ratio_dy)
-        c1t = np.arccos( (ip[0] - c1x) / c1r)
+        c1t = np.arccos((ip[0] - c1x) / c1r)
     else:
         # Then compare the [at most] two points and select the nearest to interior_centre
         ip_dists = [pq_dist(interior_centre, ip) for ip in possible_ip]
@@ -497,6 +498,10 @@ def choose_interior_ip(c1c, c2c, interior_centre=(xc, yc), tc_r=tc_r, lc_r=lc_r)
         c1t = possible_ip_c1t[ip_n]
     return ip, c1t
 
+
+### # DEBUG: Skip first circle to check if that's what causes the failure to find valid roots
+### circle_centres_cw_reordered = [circle_centres_clockwise[(i+1) % len(circle_centres)] for i in np.arange(0, len(circle_centres))]
+### circle_centres_clockwise = circle_centres_cw_reordered
 
 for cc_n, (cc_xc, cc_yc) in enumerate(circle_centres_clockwise):
     prev_xc, prev_yc = circle_centres_clockwise[cc_n - 1]
