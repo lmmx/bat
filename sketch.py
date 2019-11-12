@@ -25,7 +25,7 @@ from ellipse_intersect import intersection_points, intersection_t
 
 VISUALISE = True
 SUPPRESS_SKETCH_VIS = True
-ARC_STYLE = "thin"  # Options: "dotted", "thin", thick
+ARC_STYLE = "thin"  # Options: "dotted", "thin", "thick"
 SAVE_PLOT = False
 VERBOSE = False
 
@@ -555,7 +555,7 @@ for cc_n, (cc_xc, cc_yc) in enumerate(circle_centres_clockwise):
             )
         if ARC_STYLE == "thin":
             thickness = 10
-            freq = 100 # Must be kept high so spacing is low or arc won't draw to end_t
+            freq = 100  # Must be kept high so spacing is low or arc won't draw to end_t
             spacing = thickness * 1000 / freq / cc_r
             arc_range = arange(start_t, end_t, rad(spacing))
             arc_x = [cc_xc + cc_r * cos(arc_t) for arc_t in arc_range]
