@@ -13,7 +13,7 @@ if VISUALISE or SAVE_PLOT:
     ax = plt.subplot()
     ax.set_aspect(1.0)
     plt.axis([6, 18, 14, 2])
-    ax.set_title("Sketch of some intersecting circles", size=18)
+    ax.set_title("Interior path enclosed by some circles", size=18)
     ax.set_xlabel("x", size=14)
     ax.set_ylabel("y", size=14)
 
@@ -141,22 +141,22 @@ def choose_interior_ip(c1c, c2c, interior_centre=(xc, yc), tc_r=tc_r, lc_r=lc_r)
     ip_dists = [dist(interior_centre, ip) for ip in possible_ip]
     ip_n = np.array(ip_dists).argsort().argsort().tolist().index(0)
     ip = possible_ip[ip_n]
-    c1t = arctan2(ip[1], ip[0])
-    if not c1t > 0:
-        assert c1t + rad(180) > 0, f"arctan2 returned a number below -pi ({c1t})"
-        c1t += rad(180)
+    c1t = arctan2(ip[1] - c1y, ip[0] - c1x)
+    if c1t < 0:
+        assert (c1t + 2 * np.pi) > 0, f"arctan2 returned a number below -2*pi ({c1t})"
+        c1t += 2 * np.pi
+    rec_x = c1x + (c1r * cos(c1t))
+    rec_y = c1y + (c1r * sin(c1t))
+    rec = (rec_x, rec_y)
+    assert array_equal(
+        np.round(rec, 5), np.round(ip, 5)
+    ), f"Failed to recover intersection {ip} (got {(rec)})"
+    print(f"Recovered {ip} as {rec}: t = {c1t} (circle at {c1c}, r={c1r})")
     return ip, c1t
 
 
-### # DEBUG: Skip first circle to check if that's what causes the failure to find valid roots
-### circle_centres_cw_reordered = [circle_centres_clockwise[(i+1) % len(circle_centres)] for i in np.arange(0, len(circle_centres))]
-### circle_centres_clockwise = circle_centres_cw_reordered
-
 color_list = ["red", "blue", "k", "lime"]
-circle_dict = []
 for cc_n, (cc_xc, cc_yc) in enumerate(circle_centres_clockwise):
-    if cc_n > 0:
-        continue
     # Assign radius based on whether in upper or lower half of the ellipse
     if cc_yc > yc:
         cc_r = lc_r
@@ -165,23 +165,24 @@ for cc_n, (cc_xc, cc_yc) in enumerate(circle_centres_clockwise):
     prev_xc, prev_yc = circle_centres_clockwise[cc_n - 1]
     next_xc, next_yc = circle_centres_clockwise[(cc_n + 1) % len(circle_centres)]
     # Each adjacent circle (2 per circle) may have 1 or 2 intersection points
-    ic = (12.3, 8)
+    ic = (12.3, 8)  # This is the interior centre for this case study example
     prev_ip, prev_t = choose_interior_ip((cc_xc, cc_yc), (prev_xc, prev_yc), ic)
     next_ip, next_t = choose_interior_ip((cc_xc, cc_yc), (next_xc, next_yc), ic)
-    if not array_equal(
-        prev_ip, (cc_xc + cc_r * cos(prev_t), cc_yc + cc_r * sin(prev_t))
-    ):
-        prev_t += rad(180)
-    if not array_equal(
-        next_ip, (cc_xc + cc_r * cos(next_t), cc_yc + cc_r * sin(next_t))
-    ):
-        next_t += rad(180)
     if VISUALISE or SAVE_PLOT:
-        for arc_t in np.arange(prev_t, next_t, rad(10)):
+        start_t, end_t = sorted((prev_t, next_t))
+        # Always plot the minimal length arc (corresponds to ellipse interior)
+        if (prev_t + rad(360) - next_t) < (next_t - prev_t):
+            # In this case, invert the expected order
+            start_t += rad(360)
+        start_t, end_t = sorted((start_t, end_t))
+        print(
+            f"Drawing arc on circle {cc_n} (centre {(cc_xc, cc_yc)} from {start_t} to {end_t}"
+        )
+        for arc_t in np.arange(start_t, end_t, rad(2)):
             arc_x = cc_xc + cc_r * cos(arc_t)
             arc_y = cc_yc + cc_r * sin(arc_t)
             plt.scatter(
-                arc_x, arc_y, s=50, color=color_list[cc_n % len(color_list)], alpha=0.7
+                arc_x, arc_y, s=50, color=color_list[cc_n % len(color_list)], alpha=0.3
             )
         plt.scatter(prev_ip[0], prev_ip[1], s=30, color="orange")
         plt.scatter(next_ip[0], next_ip[1], s=30, color="yellow")
@@ -190,6 +191,6 @@ for cc_n, (cc_xc, cc_yc) in enumerate(circle_centres_clockwise):
 if SAVE_PLOT:
     fig.set_figheight(10)
     fig.set_figwidth(20)
-    plt.savefig("circle-sketch.png", bbox_inches="tight")
+    plt.savefig("interior-trace-sketch.png", bbox_inches="tight")
 elif VISUALISE:
     plt.show()
