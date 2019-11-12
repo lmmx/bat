@@ -50,6 +50,21 @@ Books I also used while investigating this project:
   (for a refresher on bases A.K.A. coordinate systems in the first
   chapter)
 
+### Now what?
+
+Some other ideas I'd like to investigate having completed what I set out to do:
+- figure out if the arcs can now be parameterised as a single curve somehow
+- experiment with ellipses instead of circles to get 'sharper' curve ends, etc.
+  - or even conics inscribed inside other conics
+- turn the 2D shape into a 3D model, by importing into Blender and/or numpy-stl,
+  and applying something along the lines of a cross between 'ravioli',
+  `z = sin(x)sin(y)` – described in Callahan's _Advanced Calculus: A Geometric View_
+  (p.380) – and a symmetry map (as explored in my [symmap](https://github.com/lmmx/symmap)
+  repo earlier this year.)
+  - Note that GitHub renders `.stl` files nicely (e.g. see this model of a
+    satellite in my [3dv](https://github.com/lmmx/3dv/blob/master/stl/Deep_Space_1.stl)
+    repo)
+
 ## Further reading
 
 ### Intersection of conics
