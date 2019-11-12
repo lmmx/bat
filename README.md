@@ -19,6 +19,13 @@ simplification/factorising is in `equation_check.py`.
 
 Complete!
 
+## Plan
+
+![](bat-sketch.png)
+
+## Result
+
 ![](sketch.png)
+![](bat_dotted.png)
 ![](bat_thin.png)
 ![](bat_thick.png)

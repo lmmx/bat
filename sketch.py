@@ -24,8 +24,8 @@ from sympy.combinatorics import Permutation
 from ellipse_intersect import intersection_points, intersection_t
 
 VISUALISE = True
-SUPPRESS_SKETCH_VIS = False
-ARC_STYLE = "thick"  # Options: "thick", "thin"
+SUPPRESS_SKETCH_VIS = True
+ARC_STYLE = "thin"  # Options: "dotted", "thin", thick
 SAVE_PLOT = False
 VERBOSE = False
 
@@ -37,7 +37,10 @@ if VISUALISE or SAVE_PLOT:
         plt.axis([540, 1460, 1375, 835])
     else:
         plt.axis([0, 2000, 2000, 0])
-    ax.set_title("Sketch of a bat from geometry of intersecting conics", size=18)
+    if SUPPRESS_SKETCH_VIS and ARC_STYLE in ["thick", "thin", "dotted"]:
+        ax.set_title(f"Sketch of a bat (arc style: {ARC_STYLE})", size=18)
+    else:
+        ax.set_title("Sketch of a bat from geometry of intersecting conics", size=18)
     ax.set_xlabel("x", size=14)
     ax.set_ylabel("y", size=14)
 
@@ -551,14 +554,25 @@ for cc_n, (cc_xc, cc_yc) in enumerate(circle_centres_clockwise):
                 + f"(centre {(cc_xc, cc_yc)} from {start_t} to {end_t}"
             )
         if ARC_STYLE == "thin":
+            thickness = 10
+            freq = 100 # Must be kept high so spacing is low or arc won't draw to end_t
+            spacing = thickness * 1000 / freq / cc_r
+            arc_range = arange(start_t, end_t, rad(spacing))
+            arc_x = [cc_xc + cc_r * cos(arc_t) for arc_t in arc_range]
+            arc_y = [cc_yc + cc_r * sin(arc_t) for arc_t in arc_range]
+            plt.plot(arc_x, arc_y, color="k", alpha=1)
+        elif ARC_STYLE == "thick":
+            thickness = 100
+            freq = 100
+            spacing = thickness * 1000 / freq / cc_r
             for arc_t in arange(start_t, end_t, rad(0.1)):
                 arc_x = cc_xc + cc_r * cos(arc_t)
                 arc_y = cc_yc + cc_r * sin(arc_t)
-                plt.scatter(arc_x, arc_y, s=5, color="k", alpha=1)
-        elif ARC_STYLE == "thick":
-            thickness = 30
-            freq = 30
-            uniform_spacing = thickness * 100 / freq / tc_r
+                plt.scatter(arc_x, arc_y, s=thickness, color="k", alpha=1)
+        elif ARC_STYLE == "dotted":
+            thickness = 10
+            freq = 10
+            uniform_spacing = thickness * 1000 / freq / cc_r
             for arc_t in arange(start_t, end_t, rad(uniform_spacing)):
                 arc_x = cc_xc + cc_r * cos(arc_t)
                 arc_y = cc_yc + cc_r * sin(arc_t)
