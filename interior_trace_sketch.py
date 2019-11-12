@@ -199,6 +199,6 @@ for cc_n, (cc_xc, cc_yc) in enumerate(circle_centres_clockwise):
 if SAVE_PLOT:
     fig.set_figheight(10)
     fig.set_figwidth(20)
-    plt.savefig("interior-trace-sketch.png", bbox_inches="tight")
+    plt.savefig("interior_trace_sketch.png", bbox_inches="tight")
 elif VISUALISE:
     plt.show()

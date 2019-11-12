@@ -4,7 +4,8 @@ from numpy import arange, arccos, arctan2, array, array_equal, dot, subtract
 from numpy.linalg import norm
 from math import sin, cos, radians as rad, sqrt
 
-VISUALISE = True
+VISUALISE = False
+SAVE_PLOT = True
 
 if VISUALISE:
     fig = plt.figure()
@@ -76,5 +77,7 @@ plt.scatter(ps[0], ps[1], s=40, color="yellow", alpha=0.9)
 pw = plot_ip(ip_w)
 plt.scatter(pw[0], pw[1], s=40, color="green", alpha=0.9)
 
-if VISUALISE:
+if SAVE_PLOT:
+    plt.savefig("arctan2_demo.png", bbox_inches="tight")
+elif VISUALISE:
     plt.show()
