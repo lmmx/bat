@@ -135,6 +135,14 @@ def choose_interior_ip(c1c, c2c, interior_centre=(xc, yc), tc_r=tc_r, lc_r=lc_r)
     # P_{1,2} = c1c + a·e1 +/- b·e2
     for b_component in [b, -b]:
         ip = (c1x, c1y) + a * e1 + b_component * e2
+        test_c1 = round((ip[0] - c1x) ** 2 + (ip[1] - c1y) ** 2, ndigits=5)
+        test1 = test_c1 == round(c1r ** 2, ndigits=5)
+        assert test1, f"Error: circle {cc_n} intersection {ip} is not on the circle"
+        +f" at {(c1x,c1y)}: {test_c1}≠{c1r**2}"
+        test_c2 = round((ip[0] - c2x) ** 2 + (ip[1] - c2y) ** 2, ndigits=5)
+        test2 = test_c2 == round(c2r ** 2, ndigits=5)
+        assert test2, f"Error: circle {cc_n} intersection {ip} is not on the circle"
+        +f" at {(c2x,c2y)}: {test_c2}≠{c2r**2}"
         possible_ip.append(ip)
 
     # Then compare the [at most] two points and select the nearest to interior_centre

@@ -17,6 +17,8 @@ a unit circle and 2-by-1 ellipse is in `simple_ellipse.py`.
 Code to check the quartic equations and print them with
 simplification/factorising is in `equation_check.py`.
 
-Work in progress!
+Complete!
 
 ![](sketch.png)
+![](bat_thin.png)
+![](bat_thick.png)

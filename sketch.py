@@ -24,13 +24,19 @@ from sympy.combinatorics import Permutation
 from ellipse_intersect import intersection_points, intersection_t
 
 VISUALISE = True
+SUPPRESS_SKETCH_VIS = False
+ARC_STYLE = "thick"  # Options: "thick", "thin"
 SAVE_PLOT = False
+VERBOSE = False
 
 if VISUALISE or SAVE_PLOT:
     fig = plt.figure()
     ax = plt.subplot()
     ax.set_aspect(1.0)
-    plt.axis([0, 2000, 2000, 0])
+    if SUPPRESS_SKETCH_VIS:
+        plt.axis([540, 1460, 1375, 835])
+    else:
+        plt.axis([0, 2000, 2000, 0])
     ax.set_title("Sketch of a bat from geometry of intersecting conics", size=18)
     ax.set_xlabel("x", size=14)
     ax.set_ylabel("y", size=14)
@@ -44,7 +50,7 @@ focal_len = sqrt(h_radius ** 2 - v_radius ** 2)
 xc = 1000
 yc = 1000
 
-if VISUALISE or SAVE_PLOT:
+if (VISUALISE or SAVE_PLOT) and not SUPPRESS_SKETCH_VIS:
     plt.scatter(xc, yc, s=10, color="k")
 
     arrow_opacity = 0.4
@@ -136,7 +142,7 @@ mtc_xc = xc
 mtc_yc = yc - (mtc_dy + v_radius / 2)
 circle_centres.append((mtc_xc, mtc_yc))  # (CIRCLE 1)
 
-if VISUALISE or SAVE_PLOT:
+if (VISUALISE or SAVE_PLOT) and not SUPPRESS_SKETCH_VIS:
     # (CIRCLE 1)
     for alpha in arange(rad(0), rad(360), rad(1)):
         mtc_x = mtc_xc + tc_r * cos(alpha)
@@ -151,7 +157,7 @@ if VISUALISE or SAVE_PLOT:
 # First make the circular locus of tc_r radii around the left midpoint
 lmc_xc = xc - 1 / 2 * h_radius
 
-if VISUALISE or SAVE_PLOT:
+if (VISUALISE or SAVE_PLOT) and not SUPPRESS_SKETCH_VIS:
     for alpha in arange(rad(0), rad(360), rad(10)):
         lmc_x = lmc_xc + tc_r * cos(alpha)
         lmc_y = yc + tc_r * sin(alpha)
@@ -174,7 +180,7 @@ if VISUALISE or SAVE_PLOT:
 # Here the array intersection_points provides the (x, y) coordinates,
 # exported from `ellipse_intersect.py`.
 
-if VISUALISE or SAVE_PLOT:
+if (VISUALISE or SAVE_PLOT) and not SUPPRESS_SKETCH_VIS:
     pcol = ["red", "blue", "yellow", "magenta"]
 
     for ip_n, ip in enumerate(intersection_points):
@@ -188,7 +194,7 @@ ltc_xc = nearest_ip[0]
 ltc_yc = nearest_ip[1]
 circle_centres.append((ltc_xc, ltc_yc))  # (CIRCLE 2)
 
-if VISUALISE or SAVE_PLOT:
+if (VISUALISE or SAVE_PLOT) and not SUPPRESS_SKETCH_VIS:
     # (CIRCLE 2)
     for alpha in arange(rad(0), rad(360), rad(1)):
         ltc_x = ltc_xc + tc_r * cos(alpha)
@@ -200,7 +206,7 @@ rtc_xc = (2 * mtc_xc) - ltc_xc  # Reflect across the vertical line x = ltc_xc
 rtc_yc = ltc_yc
 circle_centres.append((rtc_xc, rtc_yc))  # (CIRCLE 3)
 
-if VISUALISE or SAVE_PLOT:
+if (VISUALISE or SAVE_PLOT) and not SUPPRESS_SKETCH_VIS:
     # (CIRCLE 3)
     for alpha in arange(rad(0), rad(360), rad(1)):
         rtc_x = rtc_xc + tc_r * cos(alpha)
@@ -226,7 +232,7 @@ hbt_roots = [
 hbt_ip = []
 hbt_t = []
 
-if VISUALISE or SAVE_PLOT:
+if (VISUALISE or SAVE_PLOT) and not SUPPRESS_SKETCH_VIS:
     pcol = ["yellow", "palegreen", "magenta", "chocolate"]
 
 for t_num, t in enumerate(hbt_roots):
@@ -244,7 +250,7 @@ for t_num, t in enumerate(hbt_roots):
     x_crossing = ltc_xc + tc_r * ((1 - t ** 2) / (1 + t ** 2))
     y_crossing = ltc_yc + tc_r * ((2 * t) / (1 + t ** 2))
     #
-    if VISUALISE or SAVE_PLOT:
+    if (VISUALISE or SAVE_PLOT) and not SUPPRESS_SKETCH_VIS:
         plt.scatter(x_crossing, y_crossing, s=50, color=pcol[t_num])
     #
     hbt_ip.append((x_crossing, y_crossing))
@@ -264,7 +270,7 @@ llc_yc = hbt_ip_l[1] + (lc_r * ((2 * t) / (1 + t ** 2)))
 circle_centres.append((llc_xc, llc_yc))  # (CIRCLE 4)
 
 # Draw the first lower circle, the leftmost one
-if VISUALISE or SAVE_PLOT:
+if (VISUALISE or SAVE_PLOT) and not SUPPRESS_SKETCH_VIS:
     # (CIRCLE 4)
     for alpha in arange(rad(0), rad(360), rad(1)):
         llc_x = llc_xc + lc_r * cos(alpha)
@@ -295,24 +301,25 @@ bmlc_xc = oem_x_crossing
 bmlc_yc = oem_y_crossing - lc_r
 circle_centres.append((bmlc_xc, bmlc_yc))  # (CIRCLE 5)
 
-# (CIRCLE 5)
-for alpha in arange(rad(0), rad(360), rad(1)):
-    bmlc_x = bmlc_xc + lc_r * cos(alpha)
-    bmlc_y = bmlc_yc + lc_r * sin(alpha)
-    plt.scatter(bmlc_x, bmlc_y, s=6, color="lightgreen")
+if (VISUALISE or SAVE_PLOT) and not SUPPRESS_SKETCH_VIS:
+    # (CIRCLE 5)
+    for alpha in arange(rad(0), rad(360), rad(1)):
+        bmlc_x = bmlc_xc + lc_r * cos(alpha)
+        bmlc_y = bmlc_yc + lc_r * sin(alpha)
+        plt.scatter(bmlc_x, bmlc_y, s=6, color="lightgreen")
 
 # Draw the final lower left quadrant circle centred at the midpoint of the other two
 lc_dx, lc_dy = (bmlc_xc - llc_xc, bmlc_yc - llc_yc)
 flmc_xc, flmc_yc = (llc_xc + lc_dx / 2, llc_yc + lc_dy / 2)
 circle_centres.append((flmc_xc, flmc_yc))  # (CIRCLE 6)
 
-plt.scatter(flmc_xc, flmc_yc, s=20, color="green")
-
-# (CIRCLE 6)
-for alpha in arange(rad(0), rad(360), rad(1)):
-    flmc_x = flmc_xc + lc_r * cos(alpha)
-    flmc_y = flmc_yc + lc_r * sin(alpha)
-    plt.scatter(flmc_x, flmc_y, s=6, color="lightgreen")
+if (VISUALISE or SAVE_PLOT) and not SUPPRESS_SKETCH_VIS:
+    plt.scatter(flmc_xc, flmc_yc, s=20, color="green")
+    # (CIRCLE 6)
+    for alpha in arange(rad(0), rad(360), rad(1)):
+        flmc_x = flmc_xc + lc_r * cos(alpha)
+        flmc_y = flmc_yc + lc_r * sin(alpha)
+        plt.scatter(flmc_x, flmc_y, s=6, color="lightgreen")
 
 # Lastly, mirror all these across the line f(y) = xc
 # (CIRCLE 7)
@@ -327,7 +334,7 @@ circle_centres.append((r_bmlc_xc, bmlc_yc))
 r_flmc_xc = 2 * xc - flmc_xc
 circle_centres.append((r_flmc_xc, flmc_yc))
 
-if VISUALISE or SAVE_PLOT:
+if (VISUALISE or SAVE_PLOT) and not SUPPRESS_SKETCH_VIS:
     # Reflected to top right circle in the lower right quadrant of the ellipse
     # (CIRCLE 7)
     for alpha in arange(rad(0), rad(360), rad(1)):
@@ -447,8 +454,8 @@ def choose_interior_ip(c1c, c2c, interior_centre=(xc, yc), tc_r=tc_r, lc_r=lc_r)
     # Reassign radius as top circle radius if circle centre is above cy midpoint
     if c1y > interior_centre[1]:
         c1r = lc_r
-    if c2y < interior_centre[1]:
-        c2r = tc_r
+    if c2y > interior_centre[1]:
+        c2r = lc_r
     assert not d > c1r + c2r, (
         f"The circles at ({c1x},{c1y}) and ({c2x},{c2y}) do not intersect!"
         + f" The radii sum to {c1r+c2r} but the circles are {d} apart"
@@ -481,6 +488,24 @@ def choose_interior_ip(c1c, c2c, interior_centre=(xc, yc), tc_r=tc_r, lc_r=lc_r)
     # P_{1,2} = c1c + a·e1 +/- b·e2
     for b_component in [b, -b]:
         ip = (c1x, c1y) + a * e1 + b_component * e2
+        test_c1 = round((ip[0] - c1x) ** 2 + (ip[1] - c1y) ** 2, ndigits=5)
+        test1 = test_c1 == round(c1r ** 2, ndigits=5)
+        assert (
+            test1
+        ), f"Error: circle {cc_n} intersection {ip} is not on the circle at {(c1x,c1y)}: {test_c1}≠{c1r**2}"
+        if VERBOSE:
+            print(
+                f"Circle {cc_n} intersection {ip} is on the circle at {(c1x,c1y)}): {test_c1}={c1r**2}"
+            )
+        test_c2 = round((ip[0] - c2x) ** 2 + (ip[1] - c2y) ** 2, ndigits=5)
+        test2 = test_c2 == round(c2r ** 2, ndigits=5)
+        assert (
+            test2
+        ), f"Error: circle {cc_n} intersection {ip} is not on the circle at {(c2x,c2y)}: {test_c2}≠{c2r**2}"
+        if VERBOSE:
+            print(
+                f"Circle {cc_n} intersection {ip} is on the circle at {(c2x,c2y)}): {test_c2}={c2r**2}"
+            )
         possible_ip.append(ip)
 
     # Then compare the [at most] two points and select the nearest to interior_centre
@@ -497,7 +522,8 @@ def choose_interior_ip(c1c, c2c, interior_centre=(xc, yc), tc_r=tc_r, lc_r=lc_r)
     assert array_equal(
         np.round(rec, 5), np.round(ip, 5)
     ), f"Failed to recover intersection {ip} (got {(rec)})"
-    print(f"Recovered {ip} as {rec}: t = {c1t} (circle at {c1c}, r={c1r})")
+    if VERBOSE:
+        print(f"Recovered {ip} as {rec}: t = {c1t} (circle at {c1c}, r={c1r})")
     return ip, c1t
 
 
@@ -512,26 +538,41 @@ for cc_n, (cc_xc, cc_yc) in enumerate(circle_centres_clockwise):
     # Each adjacent circle (2 per circle) may have 1 or 2 intersection points
     prev_ip, prev_t = choose_interior_ip((cc_xc, cc_yc), (prev_xc, prev_yc))
     next_ip, next_t = choose_interior_ip((cc_xc, cc_yc), (next_xc, next_yc))
-    if VISUALISE or SAVE_PLOT:
+    if VISUALISE or SAVE_PLOT:  # Unsuppressed by SUPPRESS_SKETCH_VIS
         start_t, end_t = sorted((prev_t, next_t))
         # Always plot the minimal length arc (corresponds to ellipse interior)
         if (prev_t + rad(360) - next_t) < (next_t - prev_t):
             # In this case, invert the expected order
             start_t += rad(360)
         start_t, end_t = sorted((start_t, end_t))
-        print(
-            f"Drawing arc on circle {cc_n} (centre {(cc_xc, cc_yc)} from {start_t} to {end_t}"
-        )
-        for arc_t in arange(start_t, end_t, rad(1)):
-            arc_x = cc_xc + cc_r * cos(arc_t)
-            arc_y = cc_yc + cc_r * sin(arc_t)
-            plt.scatter(arc_x, arc_y, s=40, color="k", alpha=0.8)
-        plt.scatter(*prev_ip, s=30, color="red")
-        plt.scatter(*next_ip, s=30, color="orange")
+        if VERBOSE:
+            print(
+                f"Drawing arc on circle {cc_n} "
+                + f"(centre {(cc_xc, cc_yc)} from {start_t} to {end_t}"
+            )
+        if ARC_STYLE == "thin":
+            for arc_t in arange(start_t, end_t, rad(0.1)):
+                arc_x = cc_xc + cc_r * cos(arc_t)
+                arc_y = cc_yc + cc_r * sin(arc_t)
+                plt.scatter(arc_x, arc_y, s=5, color="k", alpha=1)
+        elif ARC_STYLE == "thick":
+            thickness = 30
+            freq = 30
+            uniform_spacing = thickness * 100 / freq / tc_r
+            for arc_t in arange(start_t, end_t, rad(uniform_spacing)):
+                arc_x = cc_xc + cc_r * cos(arc_t)
+                arc_y = cc_yc + cc_r * sin(arc_t)
+                plt.scatter(arc_x, arc_y, s=thickness, color="k", alpha=1)
+        if not SUPPRESS_SKETCH_VIS:
+            plt.scatter(*prev_ip, s=30, color="red")
+            plt.scatter(*next_ip, s=30, color="orange")
 
 if SAVE_PLOT:
     fig.set_figheight(10)
     fig.set_figwidth(20)
-    plt.savefig("sketch.png", bbox_inches="tight")
+    if SUPPRESS_SKETCH_VIS:
+        plt.savefig(f"bat_{ARC_STYLE}.png", bbox_inches="tight")
+    else:
+        plt.savefig("sketch.png", bbox_inches="tight")
 elif VISUALISE:
     plt.show()
