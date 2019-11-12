@@ -48,14 +48,6 @@ def plot_ip(ip, circle_centre=circle_centre):
     y = cxc + r * sin(t)
     return (x, y)
 
-
-some_x = array([-1, +1, +1, -1])
-some_y = array([-1, -1, +1, +1])
-some_t = arctan2(some_y, some_x)
-for some_n, (an_x, an_y) in enumerate(zip(some_x, some_y)):
-    plt.scatter(an_x, an_y, s=30, color="k")
-    plt.arrow(0, 0, an_x, an_y, color="blue", alpha=0.3)
-
 ip_n = (2, -2)
 plt.scatter(ip_n[0], ip_n[1], s=300, color="blue", alpha=0.5)
 
