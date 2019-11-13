@@ -69,14 +69,25 @@ Some other ideas I'd like to investigate having completed what I set out to do:
 
 ### Intersection of conics
 
-- StackOverflow Q&A which gave me the idea to rearrange into a quartic polynomial to solve the problem of circle-ellipse intersection: https://math.stackexchange.com/questions/3419984/find-the-intersection-of-a-circle-and-an-ellipse/3420063#3420063
-- Mathematical formulae and JavaScript implementation of intersections for circles: https://www.xarg.org/2016/07/calculate-the-intersection-points-of-two-circles/
+- StackOverflow Q&A which gave me the idea to rearrange into a quartic polynomial to solve the problem of circle-ellipse
+  intersection: https://math.stackexchange.com/questions/3419984/find-the-intersection-of-a-circle-and-an-ellipse/3420063#3420063
+- Mathematical formulae and JavaScript implementation of intersections for circles:
+  https://www.xarg.org/2016/07/calculate-the-intersection-points-of-two-circles/
 
-### Bezout's theorem
+### Bezout's theorem and intersection theory in algebraic geometry
 
 - (Wiki) Bezout's theorem: https://en.wikipedia.org/wiki/B%C3%A9zout%27s_theorem
 - (Blog) A post on Bezout's theorem: https://thatsmaths.com/2014/01/30/bezouts-theorem/
 - (PDF) An accessible explanation of Bezout's theorem: http://sections.maa.org/florida/proceedings/2001/fitchett.pdf
+
+More advanced references than relevant to this project, but which I found of interest:
+
+- (PDF) _"Intersection Theory in Algebraic Geometry: Counting Lines in Three Dimensional Space"_
+  by Jeremy Booher: https://www.math.arizona.edu/~jeremybooher/expos/intersection_theory_promys.pdf
+- (PDF) _"Enumerative Algebraic Geometry of Conics"_ by Bashelor et al.:
+  https://www.maa.org/sites/default/files/images/upload_library/22/Ford/Bashelor.pdf
+  - This paper won the authors the 2009 Merten M. Hasse prize from the Mathematical Association of America:
+    https://www.maa.org/programs/maa-awards/writing-awards/enumerative-algebraic-geometry-of-conics
 
 ## Plan
 
