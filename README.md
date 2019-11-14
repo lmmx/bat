@@ -35,9 +35,16 @@ be solved, only:
   circle centre points under comparison for intersections, A and B,
   by constructing an orthonormal basis).
 
-This project was extremely motivating to take my studies in maths
-further, and in particular algebraic geometry. Some books I am currently
-reading:
+This project was surprisingly motivating to rekindle my studies in
+algebraic geometry (since conics such as circles and ellipses are the
+classic introductory examples of algebraic varieties). The foremost
+reference on this topic is _Ideals, Varieties, and Algorithms_ by
+Cox, Little, and O'Shea (conics are discussed on page 6 and intersection
+of conics on pages 451-467, however the focus there is on finding the number
+of intersections [quantifying the "multiplicity"] more than locating
+the points of intersection).
+
+Some books I am currently reading:
 
 - Irving Kaplansky, _Linear Algebra and Geometry: A Second Course_
 - Michael Henle, _A Combinatorial Introduction to Topology_
