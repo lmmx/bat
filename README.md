@@ -67,11 +67,18 @@ Some other ideas I'd like to investigate having completed what I set out to do:
 
 ## Further reading
 
+### Inspirations for this work
+
+- (Blog) This visual explanation of hypocycloids (which I'd come across before) kick started this project
+  from idle thought into code: https://bhaskar-kamble.github.io/wheelswithinwheels.html
+- (Wiki) Hypotrochoid: https://en.wikipedia.org/wiki/Hypotrochoid
+- (Code) Python program for drawing hypocycloids: https://github.com/righthandabacus/hypcycloid/blob/master/hypcycloid.py
+
 ### Intersection of conics
 
-- StackOverflow Q&A which gave me the idea to rearrange into a quartic polynomial to solve the problem of circle-ellipse
+- (Q&A) StackOverflow gave me the idea to rearrange into a quartic polynomial to solve the problem of circle-ellipse
   intersection: https://math.stackexchange.com/questions/3419984/find-the-intersection-of-a-circle-and-an-ellipse/3420063#3420063
-- Mathematical formulae and JavaScript implementation of intersections for circles:
+- (Blog) Mathematical formulae and JavaScript implementation of intersections for circles:
   https://www.xarg.org/2016/07/calculate-the-intersection-points-of-two-circles/
 
 ### Bezout's theorem and intersection theory in algebraic geometry
