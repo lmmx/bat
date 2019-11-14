@@ -95,6 +95,9 @@ More advanced references than relevant to this project, but which I found of int
   https://www.maa.org/sites/default/files/images/upload_library/22/Ford/Bashelor.pdf
   - This paper won the authors the 2009 Merten M. Hasse prize from the Mathematical Association of America:
     https://www.maa.org/programs/maa-awards/writing-awards/enumerative-algebraic-geometry-of-conics
+  - A discussion of the approach to whittling down the possible number of intersections they talk about (from
+    7776 to 3264) can also be found in _Defining Algebraic Intersections_ by Fulton and MacPherson,
+    chapter 1 of the book _Algebraic Geometry_ edited by Loren D. Olson (Springer, 1978).
 
 ## Plan
 
