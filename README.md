@@ -3,7 +3,10 @@
 Sketching a bat with numpy and matplotlib, inspired by
 "animated pencils" demonstrating hypocycloid and epicycloids.
 
-(To skip to the images, jump to the [_Results_](#results-and-notes-on-geometric-construction) section)
+![](img/readme-result-collage.png)
+
+(To skip to the images and explanation of the geometric construction,
+jump to the [_Results_](#results-and-notes-on-geometric-construction) section)
 
 Along the way, I figured out how to find the intersection of
 a circle and an ellipse, and replaced a call to sympy's
