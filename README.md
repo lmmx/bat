@@ -3,7 +3,7 @@
 Sketching a bat with numpy and matplotlib, inspired by
 "animated pencils" demonstrating hypocycloid and epicycloids.
 
-(For images, see the _Results_ section of this README!)
+(To skip to the images, jump to the [_Results_](#results-and-notes-on-geometric-construction) section)
 
 Along the way, I figured out how to find the intersection of
 a circle and an ellipse, and replaced a call to sympy's
@@ -14,10 +14,10 @@ which can then be solved by numpy's `polyroot` by finding
 the eigenvalues of the companion matrix).
 
 A minimal working example of the intersection code, with
-a unit circle and 2-by-1 ellipse is in `simple_ellipse.py`.
+a unit circle and 2-by-1 ellipse is in [`simple_ellipse.py`](https://github.com/lmmx/bat/blob/master/src/simple_ellipse.py).
 
 Code to check the quartic equations and print them with
-simplification/factorising is in `equation_check.py`. I used
+simplification/factorising is in [`equation_check.py`](https://github.com/lmmx/bat/blob/master/src/equatin_check.py). I used
 SymPy to verify the equations, and ultimately used SymPy-formatted
 expressions to copy and paste in as code (i.e. substituting symbols
 in the SymPy formulae for the Python variable names used).
@@ -60,10 +60,11 @@ Books I also used while investigating this project:
 ### Now what?
 
 Some other ideas I'd like to investigate having completed what I set out to do:
-- figure out if the arcs can now be parameterised as a single curve somehow
-- experiment with ellipses instead of circles to get 'sharper' curve ends, etc.
+- Figure out if the arcs can now be parameterised as a single curve somehow
+- Experiment with ellipses instead of circles to get 'sharper' curve ends, etc.
   - or even conics inscribed inside other conics
-- turn the 2D shape into a 3D model, by importing into Blender and/or numpy-stl,
+  - Animate the bat by altering these parameters to produce 'flapping'
+- Turn the 2D shape into a 3D model, by importing into Blender and/or numpy-stl,
   and applying something along the lines of a cross between 'ravioli',
   `z = sin(x)sin(y)` – described in Callahan's _Advanced Calculus: A Geometric View_
   (p.380) – and a symmetry map (as explored in my [symmap](https://github.com/lmmx/symmap)
@@ -71,6 +72,14 @@ Some other ideas I'd like to investigate having completed what I set out to do:
   - Note that GitHub renders `.stl` files nicely (e.g. see this model of a
     satellite in my [3dv](https://github.com/lmmx/3dv/blob/master/stl/Deep_Space_1.stl)
     repo)
+- Animate the bat in 3D by constructing a torus rather than an ellipse, and moving
+  it around the torus.
+  - Construction of a torus is detailed in _Differential Geometry of Curves and Surfaces_
+  by Do Carmo:
+    - illustrated in figure 2-9 alongside 2.2 example 4 on p.64:
+      - ![](img/do-carmo-torus.png)
+    - parameterisation in example 6 on p.67):
+      - `x(u,v) = ((r*cos(u) + a)*cos(v), (r*cos(u) + a)*sin(v), r*sin(u)`
 
 ## Further reading
 
