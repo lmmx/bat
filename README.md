@@ -64,6 +64,8 @@ Books I also used while investigating this project:
 
 Some other ideas I'd like to investigate having completed what I set out to do:
 - Figure out if the arcs can now be parameterised as a single curve somehow
+  - DFT can be used to convert line drawing images [as coordinates] to parametric equations (example: http://www.i-programmer.info/projects/119-graphics-and-games/5735-how-to-draw-einsteins-face-parametrically.html code: https://www.i-programmer.info/CodeBin/Parametric.zip)
+  - 1st order animation possible to get coordinate change --> calculate resulting parametric equation change?
 - Experiment with ellipses instead of circles to get 'sharper' curve ends, etc.
   - or even conics inscribed inside other conics
   - Animate the bat by altering these parameters to produce 'flapping'
