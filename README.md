@@ -64,6 +64,8 @@ Books I also used while investigating this project:
 
 Some other ideas I'd like to investigate having completed what I set out to do:
 - Figure out if the arcs can now be parameterised as a single curve somehow
+  - Example of how to parametrise the batman logo is given [here](http://www.talljerome.com/NOLA/images/parametric/parametric_batbegin.gif)
+    and animated morphing between different logos [in Desmos here](https://www.desmos.com/calculator/wf21on2s9y)
   - DFT can be used to convert line drawing images [as coordinates] to parametric equations (example: ["How To Draw Einstein's Face Parametrically"](http://www.i-programmer.info/projects/119-graphics-and-games/5735-how-to-draw-einsteins-face-parametrically.html), [code](https://www.i-programmer.info/CodeBin/Parametric.zip))
   - 1st order animation possible to get coordinate change --> calculate resulting parametric equation change?
     (e.g. ["First Order Motion Model for Image Animation"](https://github.com/AliaksandrSiarohin/first-order-model) at NeurIPS 2019, [via](https://twitter.com/healthyalgo/status/1312818343582199808?s=21))
